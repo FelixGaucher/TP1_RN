@@ -31,7 +31,30 @@ def softmax_ce_naive_forward_backward(X, W, y, reg):
     dW = np.zeros(W.shape)
 
     ### TODO ###
-    # Ajouter code ici #
+    # Ajouter code ici # 
+    
+    print("X shape : ", X.shape)
+    print("W shape : ", W.shape)
+    print("y shape : ", y.shape)
+    
+    for i in range(N):
+        #dot product
+        y_w = np.dot(X[i,:],W)
+        
+        #calcul du softmax + normalisation
+        y_exp = np.exp(y_w)
+        S = y_exp / np.sum(y_exp)
+        
+        #calcul de la loss
+        loss_tmp = -np.log(S[y[i]]) + 0.5*reg*(np.linalg.norm(X[i])**2)
+        loss += loss_tmp
+        
+        #calcul du gradient pour une donnée
+        t = np.zeros((1, C))
+        t[y[i]] = 1
+        grad_tmp = np.dot((S - t), X[i]).T + 2*reg*W
+
+    loss /= N
 
     return loss, dW
 
@@ -62,6 +85,7 @@ def softmax_ce_forward_backward(X, W, y, reg):
     dW = np.zeros(W.shape)
     ### TODO ###
     # Ajouter code ici #
+    
     
     return loss, dW
 
