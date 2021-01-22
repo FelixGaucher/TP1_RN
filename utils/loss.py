@@ -90,7 +90,15 @@ def hinge_naive_forward_backward(X, W, y, reg):
 
     ### TODO ###
     # Ajouter code ici #
+    for i in range(np.size(y)):
+        predict = np.argmax(np.dot(W.T, X[i]))
+        loss += max(0, 1 + np.dot(W.T[predict], X[i]) - np.dot(W.T[y[i]], X[i])) + 0.5*reg*(np.linalg.norm(W)**2)
+        dW.T[predict] += X[i]
+        dW.T[y[i]] -= X[i]
 
+    loss /= np.size(y)
+    dW /= np.size(y)
+    
     return loss, dW
 
 
