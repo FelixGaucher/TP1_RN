@@ -44,6 +44,7 @@ class LinearClassifier:
         #     mettre effectuer une descente de gradient : W = W - learning_rate * gradient
         #     ajoutér la loss de l'itération courante dans "train_loss_history" 
         #     ajouter du code pour l'option *verbose*
+            
 
         return train_loss_history
 
