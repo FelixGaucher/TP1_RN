@@ -33,9 +33,9 @@ def softmax_ce_naive_forward_backward(X, W, y, reg):
     ### TODO ###
     # Ajouter code ici # 
     
-    print("X shape : ", X.shape)
-    print("W shape : ", W.shape)
-    print("y shape : ", y.shape)
+    #print("X shape : ", X.shape)
+    #print("W shape : ", W.shape)
+    #print("y shape : ", y.shape)
     
     for i in range(N):
         
@@ -65,6 +65,8 @@ def softmax_ce_naive_forward_backward(X, W, y, reg):
     
     loss += 0.5*reg*(np.linalg.norm(W)**2)
 
+    print(dW)
+    
     return loss, dW
 
 
@@ -111,8 +113,14 @@ def softmax_ce_forward_backward(X, W, y, reg):
     loss += 0.5*reg*(np.linalg.norm(W)**2)
     
     #calcul du gradient vectorisé
+    t = np.zeros((500,10))
+    t[np.arange(len(t)), y] = 1 #creation de la matrice des 1-hot-vectors
+    S_t = S - t
+    grad = np.dot(S_t.T, X).T + 2*reg*W
     
+    dW = grad / N
     
+    print (dW)
     return loss, dW
 
 
