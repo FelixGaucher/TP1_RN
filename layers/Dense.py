@@ -58,7 +58,10 @@ class Dense:
         # Calculer W*x + b
         # suivi de la fonction d'activation
         # N'oubliez pas de mettre les bonnes variables dans la cache!
+        H = np.dot(X, self.W) + self.b
+        A = self.activation['forward'](H)
 
+        self.cache = {'H1': H, 'L': self.W, 'score': A}
         return A
 
     def backward(self, dA, **kwargs):
