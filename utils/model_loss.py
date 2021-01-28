@@ -27,30 +27,31 @@ def cross_entropy_loss(scores, t, reg, model_params):
     
     # TODO
     # Ajouter code ici
-    
+
     # Softmax
     # a = np.dot(scores.T, t)
     e = np.exp(scores)
-    sum_s = np.sum(e)
-    s = e / sum_s
-    softmax_output = np.argmax(s)
+    sum_s = np.array([np.sum(e, axis=1)])
+    s = e / sum_s.T
+    softmax_output = s
 
     # dScores
-    print("score : ", scores.shape)
-    print("s : ", np.shape(s))
-    print("t : ", t)
     one_hot_t = np.zeros(s.shape)
-    one_hot_t[:, t] = 1
-    dScores = s - t
+    one_hot_t[np.arange(len(one_hot_t)), t] = 1
+    dScores = s - one_hot_t
 
     # Loss
-    b0 = np.array(model_params["L0"]["b"])[:, np.newaxis]
-    b1 = np.array(model_params["L1"]["b"])[np.newaxis, :]
-    W = np.dot(model_params["L0"]["W"], model_params["L1"]["W"])
-    b = np.dot(b0, b1)
+    b0 = model_params["L0"]["b"]
+    b1 = model_params["L1"]["b"]
+    W0 = model_params["L0"]["W"]
+    W1 = model_params["L1"]["W"]
+    norm = np.linalg.norm(W0) ** 2 + np.linalg.norm(b0) ** 2 + np.linalg.norm(W1) ** 2 + np.linalg.norm(b1) ** 2
 
-    losslog = np.log(s[:, t])
-    loss = -1 / N * np.sum(losslog) + reg * (np.linalg.norm(W) ** 2 + np.linalg.norm(b) ** 2)
+    print("one_hot_t :", one_hot_t)
+    print("machin mes couilles :", s[np.arange(len(s)), t])
+    # losslog = np.log(s[:, t])
+    # loss = -1 / N * losslog + reg * (np.linalg.norm(W) ** 2 + np.linalg.norm(b) ** 2)
+    loss = -1 / N * np.sum(np.log(s[np.arange(len(s)), t])) + reg * norm
 
     return loss, dScores, softmax_output
 

@@ -58,6 +58,7 @@ class Dense:
         # Calculer W*x + b
         # suivi de la fonction d'activation
         # N'oubliez pas de mettre les bonnes variables dans la cache!
+
         H = np.dot(X, self.W) + self.b
         A = self.activation['forward'](H)
 
