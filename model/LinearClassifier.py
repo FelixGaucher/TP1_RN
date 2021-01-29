@@ -44,6 +44,21 @@ class LinearClassifier:
         #     mettre effectuer une descente de gradient : W = W - learning_rate * gradient
         #     ajoutér la loss de l'itération courante dans "train_loss_history" 
         #     ajouter du code pour l'option *verbose*
+         
+        for i in range(num_iter):
+            
+            #forward & backward pass
+            loss, grad = self.forward_backward_function(X, self.W, y, learning_rate)
+            
+            #descente de gradient
+            self.W -= learning_rate * grad
+            
+            #ajout de la loss dans l'history
+            train_loss_history.append(loss)
+            
+            #verbose
+            if(verbose):
+                print("verbose")
             
 
         return train_loss_history
