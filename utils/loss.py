@@ -185,14 +185,26 @@ def hinge_forward_backward(X, W, y, reg):
 
     ### TODO ###
     # Ajouter code ici #
-    P = np.dot(X, W)
-    T = np.dot(X, W[:, y])
-    print("X:", np.shape(X))
-    print("P:", np.shape(P))
-    print("W:", np.shape(W))
-    print("T: ", np.shape(W[:, y][:, 0]))
-    print("T Values:", W[:, y][:, 0])
+    Y = np.dot(X, W)
+    predict = np.argmax(Y, axis=1)
     
+    # Calcul du score des prédictions.
+    W_predict = W[:, predict]
+    predict_score = np.diag(np.dot(X, W_predict))
     
-
+    # Calcul du score des classes cibles.
+    W_target = W[:, y]
+    target_score = np.diag(np.dot(X, W_target))
+    
+    # Calcul de la loss
+    zeros = np.zeros(np.size(y))
+    difference_score = predict_score - target_score + 1
+    loss = np.sum(np.maximum(difference_score, zeros)) / np.size(y)
+    
+    # Calcul du gradient    
+    dW[:, y] -= X.T
+    dW[:, predict] += X.T
+    
+    dW /= np.size(y)
+    
     return loss, dW
