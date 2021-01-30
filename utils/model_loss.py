@@ -47,8 +47,6 @@ def cross_entropy_loss(scores, t, reg, model_params):
     W1 = model_params["L1"]["W"]
     norm = np.linalg.norm(W0) ** 2 + np.linalg.norm(b0) ** 2 + np.linalg.norm(W1) ** 2 + np.linalg.norm(b1) ** 2
 
-    print("one_hot_t :", one_hot_t)
-    print("machin mes couilles :", s[np.arange(len(s)), t])
     # losslog = np.log(s[:, t])
     # loss = -1 / N * losslog + reg * (np.linalg.norm(W) ** 2 + np.linalg.norm(b) ** 2)
     loss = -1 / N * np.sum(np.log(s[np.arange(len(s)), t])) + reg * norm
