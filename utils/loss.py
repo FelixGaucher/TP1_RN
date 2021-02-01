@@ -201,7 +201,11 @@ def hinge_forward_backward(X, W, y, reg):
     difference_score = predict_score - target_score + 1
     loss = np.sum(np.maximum(difference_score, zeros)) / np.size(y)
     
-    # Calcul du gradient    
+    # Calcul du gradient
+    print("dW : ", dW.shape)
+    print("y : ", y.shape)
+    print("predict : ", predict.shape)
+    print(X.T[:,0])
     dW[:, y] -= X.T
     dW[:, predict] += X.T
     
