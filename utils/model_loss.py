@@ -29,7 +29,6 @@ def cross_entropy_loss(scores, t, reg, model_params):
     # Ajouter code ici
 
     # Softmax
-    # a = np.dot(scores.T, t)
     e = np.exp(scores)
     sum_s = np.array([np.sum(e, axis=1)])
     s = e / sum_s.T
@@ -45,11 +44,17 @@ def cross_entropy_loss(scores, t, reg, model_params):
     b1 = model_params["L1"]["b"]
     W0 = model_params["L0"]["W"]
     W1 = model_params["L1"]["W"]
-    norm = np.linalg.norm(W0) ** 2 + np.linalg.norm(b0) ** 2 + np.linalg.norm(W1) ** 2 + np.linalg.norm(b1) ** 2
+    W = np.array([])
+    b = np.array([])
+    W = np.append(W, W0)
+    W = np.append(W, W1)
+    b = np.append(b, b0)
+    b = np.append(b, b1)
+    norm = np.linalg.norm(W) ** 2 + np.linalg.norm(b) ** 2
 
-    # losslog = np.log(s[:, t])
-    # loss = -1 / N * losslog + reg * (np.linalg.norm(W) ** 2 + np.linalg.norm(b) ** 2)
-    loss = -1 / N * np.sum(np.log(s[np.arange(len(s)), t])) + reg * norm
+    loss = s[np.arange(len(s)), t]
+    loss = np.log(loss)
+    loss = (-1 / N) * np.sum(loss) + (0.5 * reg * norm)
 
     return loss, dScores, softmax_output
 

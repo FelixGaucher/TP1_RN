@@ -63,7 +63,7 @@ class Dense:
         A = self.activation['forward'](H)
 
         # N'oubliez pas de mettre les bonnes variables dans la cache!
-        self.cache = {'H1': H, 'L': self.W, 'score': A}
+        self.cache = {'X': X, 'H1': H, 'L': self.W, 'score': A}
         return A
 
     def backward(self, dA, **kwargs):
@@ -81,22 +81,34 @@ class Dense:
         # Ajouter code ici
 
         # récupérer le contenu de la cache
+        X = self.cache["X"]
         H1 = self.cache["H1"]
         L = self.cache["L"]
         score = self.cache["score"]
-        print("H1 :", np.shape(H1))
-        print("L :", np.shape(L))
-        print("score :", np.shape(score))
-        print("dA :", np.shape(dA))
+        print("X :", np.shape(X)) # ? // ?
+        print("H1 :", np.shape(H1)) # 5,3 // 5,10
+        print("L :", np.shape(L)) # 10,3 // 4,10
+        print("score :", np.shape(score)) # 5,3 // 5,10
+        print("dA :", np.shape(dA)) # 5,3 // 3,5?
+        print("b :", np.shape(self.b)) # 3, // 10,
+        print ("test :", np.shape(self.activation['backward'](H1)))
 
         # calculer le gradient de la loss par rapport à W et b et mettre les résultats dans self.dW et self.db
-        self.dW = np.dot(dA.T, score) # + 2 * self.reg * L).T
-        self.db = dA + 2 * self.reg * self.b
-        print("dw :", np.shape(self.dW))
+        if (np.shape(self.activation['backward'](H1)) == ()):
+            self.dW = np.dot(X.T, dA) + 2 * self.reg * L
+            self.db = dA + 2 * self.reg * self.b
+            print("if")
+        else:
+            dc = np.dot(L, self.activation['backward'](H1).T)
+            self.dW = np.dot(dc, dA) + 2 * self.reg * L
+            self.db = dA + 2 * self.reg * self.b
+            print("else")
+        # self.dw = np.dot(dA, )
+        # print("dw :", np.shape(self.dW))
+        # print("dw values :", self.dW)
 
         # Retourne la derivee de la couche courante par rapport à son entrée * la backProb dA
-        return np.dot(self.dW, dA.T)
-        #return -1
+            return np.dot(dA, self.dW.T)
 
     def get_params(self):
         return {'W': self.W, 'b': self.b}
