@@ -57,7 +57,7 @@ def softmax_ce_naive_forward_backward(X, W, y, reg):
 
         S_t = S - t
         S_t = np.array(S_t).T
-        grad_tmp = np.dot(S_t, x).T + 2*reg*W
+        grad_tmp = np.dot(S_t, x).T + reg*W
         dW += grad_tmp
 
     loss /= N
@@ -101,7 +101,7 @@ def softmax_ce_forward_backward(X, W, y, reg):
     y_w = np.dot(X,W)
 
     #calcul du softmax vectorisé
-    y_w = np.exp(y_w)
+    y_w = np.exp(y_w) # Lors du Softmax, des nombres grands peuvent exploser la limite. Il faut alors prendre la valeur maximale et soustraire toutes les valeurs par cette dernière. Puis faire l'exponentiel.
     y_sum = np.array([np.sum(y_w,1)])
     y_sum = y_sum.T
     S = y_w / y_sum
@@ -146,7 +146,18 @@ def hinge_naive_forward_backward(X, W, y, reg):
 
     ### TODO ###
     # Ajouter code ici #
+    for i in range(np.size(y)):
+        predict = np.argmax(np.dot(W.T, X[i])) # Prédiction de la classe.
+        loss += max(0, 1 + np.dot(W.T[predict], X[i]) - np.dot(W.T[y[i]], X[i])) # Calcul de la Hinge pour une donnée.
+        
+        # Calcul du gradient
+        dW.T[predict] += X[i]
+        dW.T[y[i]] -= X[i]
 
+    loss /= np.size(y)
+    loss += 0.5*reg*(np.linalg.norm(W)**2) # Ajout du terme de régularisation
+    dW /= np.size(y)
+    
     return loss, dW
 
 
@@ -174,5 +185,32 @@ def hinge_forward_backward(X, W, y, reg):
 
     ### TODO ###
     # Ajouter code ici #
-
+    
+    N = len(y)
+    C = dW.shape[1]
+    
+    Y = np.dot(X, W)
+    predict = np.argmax(Y, axis=1)
+    
+    # Calcul du score des prédictions.
+    W_predict = W[:, predict]
+    predict_score = np.diag(np.dot(X, W_predict))
+    
+    # Calcul du score des classes cibles.
+    W_target = W[:, y]
+    target_score = np.diag(np.dot(X, W_target))
+    
+    # Calcul de la loss
+    zeros = np.zeros(np.size(y))
+    difference_score = predict_score - target_score + 1
+    loss = np.sum(np.maximum(difference_score, zeros)) / np.size(y)
+    
+    # Calcul du gradient
+    mask = np.zeros((C, N))
+    mask[predict, np.arange(N)] += 1
+    mask[y, np.arange(N)] -= 1
+    
+    dW = np.dot(mask, X).T
+    dW /= np.size(y)
+    
     return loss, dW
