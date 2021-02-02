@@ -58,7 +58,7 @@ class LinearClassifier:
             
             #verbose
             if(verbose):
-                print("verbose")
+                print("loss : ", loss)
             
 
         return train_loss_history
