@@ -38,6 +38,7 @@ def cross_entropy_loss(scores, t, reg, model_params):
     one_hot_t = np.zeros(s.shape)
     one_hot_t[np.arange(len(one_hot_t)), t] = 1
     dScores = s - one_hot_t
+    dScores /= N
 
     # Loss
     b0 = model_params["L0"]["b"]
