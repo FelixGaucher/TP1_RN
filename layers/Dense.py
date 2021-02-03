@@ -63,7 +63,7 @@ class Dense:
         A = self.activation['forward'](H)
 
         # N'oubliez pas de mettre les bonnes variables dans la cache!
-        self.cache = {'X': X, 'H1': H, 'L': self.W, 'score': A}
+        self.cache = {'X': X, 'H': H, 'L': self.W, 'score': A}
         return A
 
     def backward(self, dA, **kwargs):
@@ -81,18 +81,32 @@ class Dense:
         # Ajouter code ici
 
         # récupérer le contenu de la cache
-        X = self.cache["X"]
-        H1 = self.cache["H1"]
-        L = self.cache["L"]
-        score = self.cache["score"]
+        X = self.cache["X"] #entree
+        H = self.cache["H"] #dot product
+        L = self.cache["L"] #poids
+        score = self.cache["score"] #h(H)
         print("X :", np.shape(X)) # ? // ?
-        print("H1 :", np.shape(H1)) # 5,3 // 5,10
+        print("H :", np.shape(H)) # 5,3 // 5,10
         print("L :", np.shape(L)) # 10,3 // 4,10
         print("score :", np.shape(score)) # 5,3 // 5,10
         print("dA :", np.shape(dA)) # 5,3 // 3,5?
         print("b :", np.shape(self.b)) # 3, // 10,
-        print ("test :", np.shape(self.activation['backward'](H1)))
+        print ("backward :", self.activation['backward'](H))
+        #print("dW : ", self.dW.shape)
+        
 
+        tmp = np.dot(dA, np.transpose(self.activation['backward'](H)))
+        print("dA*h'(H) : ", tmp.shape)
+        self.dW = np.dot(tmp.T, X)
+        print("grad : ", self.dW.shape)
+        
+        print("---------------")
+        #return np.dot(np.transpose(self.activation['backward'](H)), X)
+        #tmp2 = 
+        return np.dot(dA, np.dot(self.activation['backward'](H), L.T)).T
+        
+        
+        """
         # calculer le gradient de la loss par rapport à W et b et mettre les résultats dans self.dW et self.db
         if (np.shape(self.activation['backward'](H1)) == ()):
             self.dW = np.dot(X.T, dA) + 2 * self.reg * L
@@ -109,7 +123,7 @@ class Dense:
 
         # Retourne la derivee de la couche courante par rapport à son entrée * la backProb dA
             return np.dot(dA, self.dW.T)
-
+        """
     def get_params(self):
         return {'W': self.W, 'b': self.b}
         
