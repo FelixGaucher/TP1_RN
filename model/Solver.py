@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def solver(X_train, y_train, X_val, y_val, reg, optimizer, lr_decay=1.0, num_iter=100, batch_size=200, verbose=True):
+def solver(self, X_train, y_train, X_val, y_val, reg, optimizer, lr_decay=1.0, num_iter=100, batch_size=200, verbose=True):
     """Boucle d'entraînement générale d'un modèle. La méthode de descente de gradient varie
        en fonction de l'optimizer.
 
