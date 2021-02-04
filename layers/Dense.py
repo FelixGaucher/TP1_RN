@@ -63,7 +63,7 @@ class Dense:
         A = self.activation['forward'](H)
 
         # N'oubliez pas de mettre les bonnes variables dans la cache!
-        self.cache = {'X': X, 'H': H, 'L': self.W, 'score': A}
+        self.cache = {'X': X, 'H': H, 'score': A}
         return A
 
     def backward(self, dA, **kwargs):
@@ -83,11 +83,10 @@ class Dense:
         # récupérer le contenu de la cache
         X = self.cache["X"] #entree
         H = self.cache["H"] #dot product
-        L = self.cache["L"] #poids
         score = self.cache["score"] #h(H)
         print("X :", np.shape(X)) # ? // ?
         print("H :", np.shape(H)) # 5,3 // 5,10
-        print("L :", np.shape(L)) # 10,3 // 4,10
+        print("W :", np.shape(self.W)) # 10,3 // 4,10
         print("score :", np.shape(score)) # 5,3 // 5,10
         print("dA :", np.shape(dA)) # 5,3 // 3,5?
         print("b :", np.shape(self.b)) # 3, // 10,
@@ -95,15 +94,16 @@ class Dense:
         #print("dW : ", self.dW.shape)
         
 
-        tmp = np.dot(dA, np.transpose(self.activation['backward'](H)))
+        #tmp = np.dot(np.transpose(self.activation['backward'](H)), dA)
+        #tmp = np.dot(self.activation['backward'](H), dA)
+        tmp = self.activation['backward'](H) * dA
         print("dA*h'(H) : ", tmp.shape)
-        self.dW = np.dot(tmp.T, X)
+        self.dW = np.dot(X.T, tmp)
+        self.db = np.sum(tmp, axis=0)
         print("grad : ", self.dW.shape)
         
         print("---------------")
-        #return np.dot(np.transpose(self.activation['backward'](H)), X)
-        #tmp2 = 
-        return np.dot(dA, np.dot(self.activation['backward'](H), L.T)).T
+        return tmp.dot(self.W.T)
         
         
         """
