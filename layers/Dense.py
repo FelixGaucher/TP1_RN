@@ -94,15 +94,14 @@ class Dense:
         print ("backward :", self.activation['backward'](H))
         """
         # calculer le gradient de la loss par rapport à W et b et mettre les résultats dans self.dW et self.db
-        
-        print("batch size : ", dA.shape[0])
-        print("reg : ", self.reg)
+
+        # print("batch size : ", dA.shape[0])
+        # print("reg : ", self.reg)
         tmp = self.activation['backward'](H) * dA
         #print("dA*h'(H) : ", tmp.shape)
         self.dW = np.dot(X.T, tmp) + (self.reg*self.W)
-        self.dW /= dA.shape[0]
         self.db = np.sum(tmp, axis=0)
-        
+
         # Retourne la derivee de la couche courante par rapport à son entrée * la backProb dA
         return tmp.dot(self.W.T)
         

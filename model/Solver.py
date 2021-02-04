@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def solver(self, X_train, y_train, X_val, y_val, reg, optimizer, lr_decay=1.0, num_iter=100, batch_size=200, verbose=True):
+def solver(X_train, y_train, X_val, y_val, reg, optimizer, lr_decay=1.0, num_iter=100, batch_size=200, verbose=True):
     """Boucle d'entraînement générale d'un modèle. La méthode de descente de gradient varie
        en fonction de l'optimizer.
 
@@ -44,7 +44,10 @@ def solver(self, X_train, y_train, X_val, y_val, reg, optimizer, lr_decay=1.0, n
         # TODO
         # Ajouter code ici.
         # 1. Créer une batch de données
-        batch_x, batch_y = self.sample(X_train, y_train, batch_size)
+        batch = sample(X_train, y_train, batch_size)
+        batch_selection = np.random.randint(len(batch))
+        batch_x = batch[batch_selection][0]
+        batch_y = batch[batch_selection][1]
 
         # 2. Calculer la loss et les gradients
         scores = model.forward(batch_x)
