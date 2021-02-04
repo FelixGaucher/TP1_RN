@@ -84,6 +84,7 @@ class Dense:
         X = self.cache["X"] #entree
         H = self.cache["H"] #dot product
         score = self.cache["score"] #h(H)
+        """
         print("X :", np.shape(X)) # ? // ?
         print("H :", np.shape(H)) # 5,3 // 5,10
         print("W :", np.shape(self.W)) # 10,3 // 4,10
@@ -91,39 +92,19 @@ class Dense:
         print("dA :", np.shape(dA)) # 5,3 // 3,5?
         print("b :", np.shape(self.b)) # 3, // 10,
         print ("backward :", self.activation['backward'](H))
-        #print("dW : ", self.dW.shape)
-        
-
-        #tmp = np.dot(np.transpose(self.activation['backward'](H)), dA)
-        #tmp = np.dot(self.activation['backward'](H), dA)
-        tmp = self.activation['backward'](H) * dA
-        print("dA*h'(H) : ", tmp.shape)
-        self.dW = np.dot(X.T, tmp)
-        self.db = np.sum(tmp, axis=0)
-        print("grad : ", self.dW.shape)
-        
-        print("---------------")
-        return tmp.dot(self.W.T)
-        
-        
         """
         # calculer le gradient de la loss par rapport à W et b et mettre les résultats dans self.dW et self.db
-        if (np.shape(self.activation['backward'](H1)) == ()):
-            self.dW = np.dot(X.T, dA) + 2 * self.reg * L
-            self.db = dA + 2 * self.reg * self.b
-            print("if")
-        else:
-            dc = np.dot(L, self.activation['backward'](H1).T)
-            self.dW = np.dot(dc, dA) + 2 * self.reg * L
-            self.db = dA + 2 * self.reg * self.b
-            print("else")
-        # self.dw = np.dot(dA, )
-        # print("dw :", np.shape(self.dW))
-        # print("dw values :", self.dW)
+
+        # print("batch size : ", dA.shape[0])
+        # print("reg : ", self.reg)
+        tmp = self.activation['backward'](H) * dA
+        #print("dA*h'(H) : ", tmp.shape)
+        self.dW = np.dot(X.T, tmp) + (self.reg*self.W)
+        self.db = np.sum(tmp, axis=0)
 
         # Retourne la derivee de la couche courante par rapport à son entrée * la backProb dA
-            return np.dot(dA, self.dW.T)
-        """
+        return tmp.dot(self.W.T)
+
     def get_params(self):
         return {'W': self.W, 'b': self.b}
         
