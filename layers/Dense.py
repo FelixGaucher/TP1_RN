@@ -52,7 +52,6 @@ class Dense:
         """
         self.cache = None
         A = 0
-        
         # TODO
         # Ajouter code ici
 
@@ -83,22 +82,9 @@ class Dense:
         # récupérer le contenu de la cache
         X = self.cache["X"] #entree
         H = self.cache["H"] #dot product
-        score = self.cache["score"] #h(H)
-        """
-        print("X :", np.shape(X)) # ? // ?
-        print("H :", np.shape(H)) # 5,3 // 5,10
-        print("W :", np.shape(self.W)) # 10,3 // 4,10
-        print("score :", np.shape(score)) # 5,3 // 5,10
-        print("dA :", np.shape(dA)) # 5,3 // 3,5?
-        print("b :", np.shape(self.b)) # 3, // 10,
-        print ("backward :", self.activation['backward'](H))
-        """
         # calculer le gradient de la loss par rapport à W et b et mettre les résultats dans self.dW et self.db
 
-        # print("batch size : ", dA.shape[0])
-        # print("reg : ", self.reg)
         tmp = self.activation['backward'](H) * dA
-        #print("dA*h'(H) : ", tmp.shape)
         self.dW = np.dot(X.T, tmp) + (self.reg*self.W)
         self.db = np.sum(tmp, axis=0)
 
