@@ -1,0 +1,4 @@
+/datasets/cifar-10-batches-py
+utils/__pycache__/
+model/__pycache__/
+visualization/__pycache__/

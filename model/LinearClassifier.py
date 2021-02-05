@@ -36,14 +36,35 @@ class LinearClassifier:
             self.W = np.random.randn(D, C) * weigth_scale
 
         train_loss_history = []
-        
+
         ### TODO ###
         # coder une boucle d'entrainement faisant "num_iter" iterations.
-        # à chaque itération, 
+        # à chaque itération,
         #     faire une forward+backward pass afin de calculer la loss et le gradient pour une batch de "batch_size" elements choisis au hasard
         #     mettre effectuer une descente de gradient : W = W - learning_rate * gradient
-        #     ajoutér la loss de l'itération courante dans "train_loss_history" 
+        #     ajoutér la loss de l'itération courante dans "train_loss_history"
         #     ajouter du code pour l'option *verbose*
+
+        for i in range(num_iter):
+
+            #creation du minibatch
+            batch_selection = np.random.choice(len(y), size=batch_size, replace=False)
+            batch_x = X[batch_selection]
+            batch_y = y[batch_selection]
+
+            #forward & backward pass
+            loss, grad = self.forward_backward_function(batch_x, self.W, batch_y, learning_rate)
+
+            #descente de gradient
+            self.W -= learning_rate * grad
+
+            #ajout de la loss dans l'history
+            train_loss_history.append(loss)
+
+            #verbose
+            if(verbose):
+                print("loss : ", loss)
+
 
         return train_loss_history
 
