@@ -62,7 +62,7 @@ class LinearClassifier:
             train_loss_history.append(loss)
 
             #verbose
-            if(verbose):
+            if verbose and i % 500 == 0:
                 print("loss : ", loss)
 
 
