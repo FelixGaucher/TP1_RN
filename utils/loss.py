@@ -33,10 +33,6 @@ def softmax_ce_naive_forward_backward(X, W, y, reg):
     ### TODO ###
     # Ajouter code ici #
 
-    #print("X shape : ", X.shape)
-    #print("W shape : ", W.shape)
-    #print("y shape : ", y.shape)
-
     for i in range(N):
 
         #dot product
@@ -64,8 +60,6 @@ def softmax_ce_naive_forward_backward(X, W, y, reg):
     dW /= N
 
     loss += 0.5*reg*(np.linalg.norm(W)**2)
-
-    # print(dW)
 
     return loss, dW
 
